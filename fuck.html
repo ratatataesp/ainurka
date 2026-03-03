@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11 "Г" - Үлкен Құттықтау</title>
+    <style>
+        :root {
+            --pink: #fce4ec;
+            --deep-pink: #f06292;
+            --beige: #fdf5e6;
+            --white: #ffffff;
+            --gold: #d4af37;
+            --blue: #4fc3f7;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--beige);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* --- ФОНДАҒЫ ГҮЛДЕР --- */
+        #bg-animation {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
+        }
+        .floating-item {
+            position: absolute; font-size: 25px; opacity: 0.7;
+            animation: float-around 12s infinite linear;
+        }
+        @keyframes float-around {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- СЫЙЛЫҚ ҚОРАБЫ --- */
+        #gift-screen { text-align: center; z-index: 500; }
+        .gift-emoji {
+            font-size: 150px; cursor: pointer;
+            animation: pulse-gift 2s infinite ease-in-out;
+        }
+        @keyframes pulse-gift {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 25px var(--deep-pink)); }
+        }
+
+        /* --- НЕГІЗГІ КОНТЕНТ --- */
+        .container {
+            display: none; opacity: 0;
+            width: 90%; max-width: 1100px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 40px; padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border: 2px solid white;
+            transition: 1s ease;
+            z-index: 100;
+            max-height: 85vh;
+            overflow-y: auto; /* Мәтін көп болса жылжиды */
+        }
+        .content-layout { display: flex; align-items: flex-start; gap: 40px; }
+        .photo-box { flex: 1; position: sticky; top: 0; }
+        .main-img {
+            width: 100%; max-width: 400px;
+            border-radius: 25px; border: 10px solid white;
+            transform: rotate(-3deg);
+            animation: img-float 4s infinite ease-in-out;
+        }
+        @keyframes img-float {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        .text-box { flex: 1.5; text-align: left; }
+        h1 { color: var(--deep-pink); font-size: 2.8rem; margin-bottom: 25px; border-bottom: 2px solid var(--pink); display: inline-block; }
+        
+        .wish-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px; border-radius: 20px;
+            margin-bottom: 20px; border-left: 8px solid var(--deep-pink);
+            opacity: 0; transform: translateX(30px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .wish-card h3 { margin-top: 0; color: #444; font-size: 1.4rem; }
+        .wish-card p { line-height: 1.6; color: #555; font-size: 1.05rem; }
+        
+        .mentor { border-left-color: var(--gold); background: #fffdf7; }
+        .show-card { animation: card-appear 0.7s forwards; }
+        @keyframes card-appear { to { opacity: 1; transform: translateX(0); } }
+
+        /* --- БАТЫРМАЛАР --- */
+        .btn-group { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; position: sticky; bottom: 0; background: rgba(255,255,255,0.1); padding: 10px 0; }
+        .btn {
+            padding: 15px 30px; border-radius: 35px; border: none;
+            cursor: pointer; font-weight: bold; font-size: 1rem;
+            transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: white;
+        }
+        .btn-train { background: #4caf50; }
+        .btn-video { background: #2196f3; }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+        /* --- ВИДЕО MODAL --- */
+        #video-modal {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000; justify-content: center; align-items: center;
+        }
+        .modal-content { position: relative; width: 85%; max-width: 850px; }
+        video { width: 100%; border-radius: 20px; box-shadow: 0 0 50px rgba(255,255,255,0.2); }
+        .close-video { position: absolute; top: -50px; right: 0; color: white; font-size: 45px; cursor: pointer; }
+
+        /* --- ПОЕЗД --- */
+        #train-track { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; z-index: 1000; pointer-events: none; }
+        #train-mover { position: absolute; bottom: 20px; left: -2500px; display: flex; align-items: flex-end; }
+        .animate-train { animation: drive-train 16s linear forwards; }
+        @keyframes drive-train { from { left: -2500px; } to { left: 100%; } }
+        .wagon { width: 145px; height: 105px; background: var(--deep-pink); border-radius: 12px 12px 0 0; margin-right: 12px; position: relative; box-shadow: inset 0 5px 10px rgba(255,255,255,0.3); }
+        .locomotive { width: 190px; height: 135px; background: #333; border-radius: 10px 90px 0 0; position: relative; }
+        .head-sticker { width: 95px; height: 95px; border-radius: 50%; border: 4px solid white; position: absolute; top: -85px; background-size: cover; background-position: center top; animation: bob-head 0.6s infinite alternate; }
+        .wheel { position: absolute; bottom: -12px; width: 38px; height: 38px; background: #222; border-radius: 50%; border: 3px dashed #555; animation: rotate-wheel 0.5s infinite linear; }
+        @keyframes rotate-wheel { to { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) { 
+            .content-layout { flex-direction: column; text-align: center; } 
+            .text-box { text-align: center; }
+            .wish-card { transform: translateY(30px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-animation"></div>
+
+    <div id="gift-screen">
+        <div class="gift-emoji" onclick="openMagic()">🎁</div>
+        <p style="color: var(--deep-pink); font-size: 1.2rem; margin-top: 15px;">Сыйлықты ашу үшін басыңыз...</p>
+    </div>
+
+    <div class="container" id="main-content">
+        <div class="content-layout">
+            <div class="photo-box">
+                <img src="kyzdar.jpeg" alt="11 Г" class="main-img">
+            </div>
+            <div class="text-box">
+                <h1>Аяулы арулар! 🌸</h1>
+                
+                <div class="wish-card mentor">
+                    <h3>Гүлнұр Мұратовна ✨</h3>
+                    <p>Сіз — біздің сыныптың ғана емес, мектебіміздің де ақылшысы, жанашыр ұстазысыз. Әрқашан мейірім мен шуақ шашып жүретін жүзіңізден күлкі кетпесін! Көктемнің осы бір тамаша мерекесінде Сізге зор денсаулық, қажымас қайрат және отбасыңызға бақ-береке тілейміз. Біз Сізді жақсы көреміз!</p>
+                </div>
+
+                <div class="wish-card">
+                    <h3>Мадина мен Айым 🌷</h3>
+                    <p>Сыныбымыздың көркі де, мақтанышы да сендерсіңдер! Әрқашан осылай сүйкімді, ақылды әрі белсенді болып жүре беріңдер. Алдарыңа қойған барлық мақсаттарыңа жетіп, ҰБТ-дан жоғары балл жинап, қалаған оқу орындарыңа түсулеріңе тілектеспіз. Жастық шақтарың жарқын сәттерге толы болсын!</p>
+                </div>
+
+                <div class="wish-card">
+                    <h3>11 "Г" арулары мен мұғалімдер қауымы 💐</h3>
+                    <p>Баршаңызды Халықаралық әйелдер күнімен шын жүректен құттықтаймыз! Көктемнің алғашқы гүлдеріндей құлпырып, айналаңызға тек жақсылық нұрын сеуіп жүре беріңіздер. Жүректеріңіз жылуға, өмірлеріңіз бақытқа толсын. Әрбір күндеріңіз мерекедей шуақты болсын!</p>
+                </div>
+
+                <div class="wish-card" style="border-left-color: #ffccbc;">
+                    <h3>Игі тілекпен: 11 "Г" жігіттері 🎀</h3>
+                    <p>Сендердің бақытты күлкілерің — біз үшін ең үлкен сыйлық. Әрқашан аман болыңдар!</p>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-train" onclick="runTrain()">Поезд жіберу (прикол) 🚂</button>
+                    <button class="btn btn-video" onclick="showVideo()">🎬 Бонус видеоны көру</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="video-modal">
+        <div class="modal-content">
+            <span class="close-video" onclick="hideVideo()">×</span>
+            <video id="myVideo" controls>
+                <source src="video_8march.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <div id="train-track">
+        <div id="train-mover">
+            <div class="wagon"><div class="head-sticker" style="background-image: url(madna1.jpeg);"></div><div class="wheel" style="left:15px"></div><div class="wheel" style="right:15px"></div></div>
+            <div class="wagon"><div class="head-sticker" style="background-image: url(manda.jpeg);"></div><div class="wheel" style="left:15px"></div><div class="wheel" style="right:15px"></div></div>
+            <div class="wagon"><div class="head-sticker" style="background-image: url(msdan.jpeg);"></div><div class="wheel" style="left:15px"></div><div class="wheel" style="right:15px"></div></div>
+            <div class="wagon"><div class="head-sticker" style="background-image: url(aiym.jpeg);"></div><div class="wheel" style="left:15px"></div><div class="wheel" style="right:15px"></div></div>
+            <div class="wagon"><div class="head-sticker" style="background-image: url(chad.jpeg);"></div><div class="wheel" style="left:15px"></div><div class="wheel" style="right:15px"></div></div>
+            <div class="wagon"><div class="head-sticker" style="background-image: url();"></div><div class="wheel" style="left:15px"></div><div class="wheel" style="right:15px"></div></div>
+            <div class="wagon"><div class="head-sticker" style="background-image: url('apai.jpeg');"></div><div class="wheel" style="left:15px"></div><div class="wheel" style="right:15px"></div></div>
+            <div class="locomotive">
+                <div class="wheel" style="left:20px"></div><div class="wheel" style="left:75px"></div><div class="wheel" style="right:20px"></div>
+                <div style="color:white; padding:30px; font-weight:bold; text-align:center; font-size:1.1rem;">11"Г" EXPRESS</div>
+                <div style="position:absolute; top:-40px; left:45px; font-size:40px">❤️</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createDecor() {
+            const bg = document.getElementById('bg-animation');
+            const items = ['🌸', '🌷', '✨', '💖', '💐', '🎀', '🎈'];
+            const el = document.createElement('div');
+            el.className = 'floating-item';
+            el.innerText = items[Math.floor(Math.random() * items.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = (Math.random() * 5 + 7) + 's';
+            bg.appendChild(el);
+            setTimeout(() => el.remove(), 12000);
+        }
+        setInterval(createDecor, 400);
+
+        function openMagic() {
+            document.getElementById('gift-screen').style.display = 'none';
+            const container = document.getElementById('main-content');
+            container.style.display = 'block';
+            document.getElementById('train-track').style.display = 'block';
+            setTimeout(() => {
+                container.style.opacity = '1';
+                runTrain();
+                const cards = document.querySelectorAll('.wish-card');
+                cards.forEach((card, i) => {
+                    setTimeout(() => card.classList.add('show-card'), i * 300);
+                });
+            }, 100);
+        }
+
+        function runTrain() {
+            const train = document.getElementById('train-mover');
+            train.classList.remove('animate-train');
+            void train.offsetWidth;
+            train.classList.add('animate-train');
+        }
+
+        function showVideo() { document.getElementById('video-modal').style.display = 'flex'; }
+        function hideVideo() { 
+            const modal = document.getElementById('video-modal');
+            document.getElementById('myVideo').pause();
+            modal.style.display = 'none'; 
+        }
+    </script>
+</body>
+</html>
